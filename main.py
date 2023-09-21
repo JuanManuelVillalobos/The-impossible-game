@@ -8,7 +8,7 @@ BLUE = (50, 50, 255)
 SCREEN_WIDTH = 1280
 SCREEN_HEIGHT = 720
 
-skfjbhwe laiuh fuegwyb
+
 
 # Create an 1280x720 sized screen
 screen = pygame.display.set_mode([SCREEN_WIDTH, SCREEN_HEIGHT])
@@ -134,7 +134,7 @@ def enemy_handler(x,y):
 
 
 
-##TODO MAKE FILE THAT THE LEVELS CAN BE IN
+
 
 
 
