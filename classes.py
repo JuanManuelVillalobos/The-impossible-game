@@ -3,6 +3,10 @@ import pygame
 WHITE = (255, 255, 255)
 BLUE = (50, 50, 255)
 
+
+for x in range(0,1000):
+    pass
+
 class Player(pygame.sprite.Sprite):
     """ This class represents the red square that the player
     controls. """
