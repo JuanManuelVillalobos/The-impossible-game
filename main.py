@@ -119,3 +119,6 @@ while not done:
     clock.tick(60)
 
 pygame.quit()
+
+for x in range(0,100):
+    pass
