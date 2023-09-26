@@ -13,8 +13,13 @@ class Player(pygame.sprite.Sprite):
         super().__init__()
 
         # Set height, width
+        self.respawn = pygame.Vector2()
         self.image = pygame.Surface([15, 15])
         self.image.fill('red')
+
+        # Set respawn position
+        self.respawn.x = x
+        self.respawn.y = y
 
         # Make our top-left corner the passed-in location.
         self.rect = self.image.get_rect()
@@ -60,11 +65,12 @@ class Player(pygame.sprite.Sprite):
             else:
                 self.rect.top = block.rect.bottom
 
+        # Check and see if we hit an enemy
         enemy_hit_list = pygame.sprite.spritecollide(self, self.enemies, False)
         for enemy in enemy_hit_list:
             #Reset player:
-            self.rect.x = 55
-            self.rect.y = 55
+            self.rect.x = self.respawn.x
+            self.rect.y = self.respawn.y
 
 
 class Wall(pygame.sprite.Sprite):
@@ -104,3 +110,4 @@ class Enemy(pygame.sprite.Sprite):
     def update(self):
         """ Update the enemy position. """
         self.rect.center = (self.rect.center[0] + self.change_x, self.rect.center[1] + self.change_y)
+
