@@ -119,3 +119,5 @@ while not done:
     clock.tick(60)
 
 pygame.quit()
+
+yes = input("Do you want to play again? (y/n)")
