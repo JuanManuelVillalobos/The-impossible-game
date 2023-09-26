@@ -15,8 +15,6 @@ screen = pygame.display.set_mode([SCREEN_WIDTH, SCREEN_HEIGHT])
 pygame.display.set_caption('Worlds hardest game')
 
 
-changingspeed_x = 0
-changingspeed_y = 0
 #Handle movement of enemies
 def enemy_handler(x,y):
     global enemy_list
@@ -112,9 +110,6 @@ while not done:
     all_sprite_list.update()
 
     screen.fill(BACKGROUND)
-
-
-    #draw enemies and update
 
     all_sprite_list.draw(screen)
 
