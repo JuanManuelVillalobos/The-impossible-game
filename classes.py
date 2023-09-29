@@ -2,6 +2,8 @@ import pygame
 
 WHITE = (255, 255, 255)
 BLUE = (50, 50, 255)
+GREEN = (0, 255, 0)
+
 
 class Player(pygame.sprite.Sprite):
     """ This class represents the red square that the player
@@ -30,6 +32,10 @@ class Player(pygame.sprite.Sprite):
         self.change_x = 0
         self.change_y = 0
         self.walls = None
+
+        #Determine if cube won
+        self.win = None
+
 
     def changespeed(self, x, y):
         """ Change the speed of the player. """
@@ -68,13 +74,19 @@ class Player(pygame.sprite.Sprite):
         # Check and see if we hit an enemy
         enemy_hit_list = pygame.sprite.spritecollide(self, self.enemies, False)
         for enemy in enemy_hit_list:
-            #Reset player:
+            # Reset player:
             self.rect.x = self.respawn.x
             self.rect.y = self.respawn.y
+
+    def win(self):
+        winning_cube_hit_list = pygame.sprite.spritecollide(self, self.winning_cube, False)
+        for winning_cube in winning_cube_hit_list:
+            self.win = True
 
 
 class Wall(pygame.sprite.Sprite):
     """ Wall the enemy can run into. """
+
     def __init__(self, x, y, width, height):
         """ Constructor for the wall that the enemy can run into. """
         # Call the parent's constructor
@@ -89,6 +101,7 @@ class Wall(pygame.sprite.Sprite):
         self.rect.y = y
         self.rect.x = x
 
+
 class Enemy(pygame.sprite.Sprite):
     def __init__(self, x, y):
         super().__init__()
@@ -96,7 +109,7 @@ class Enemy(pygame.sprite.Sprite):
         self.image = pygame.Surface((2 * self.radius, 2 * self.radius), pygame.SRCALPHA)
         pygame.draw.circle(self.image, WHITE, (self.radius, self.radius), self.radius)
         self.rect = self.image.get_rect()
-        self.rect.center = pygame.Vector2(x,y)
+        self.rect.center = pygame.Vector2(x, y)
 
         # Set speed vector
         self.change_x = 0
@@ -112,13 +125,30 @@ class Enemy(pygame.sprite.Sprite):
         self.rect.center = (self.rect.center[0] + self.change_x, self.rect.center[1] + self.change_y)
 
 
-class Level1():
+class WinningCube(pygame.sprite.Sprite):
+    def __init__(self, x, y):
+        super().__init__()
+
+        # Make winning block
+        self.image = pygame.Surface([50, 50])
+        self.image.fill(GREEN)
+
+        # Make our top-left corner the passed-in location.
+        self.rect = self.image.get_rect()
+        self.rect.y = y
+        self.rect.x = x
+
+class BaseLevel():
     def __init__(self):
         self.level_sprite_list = pygame.sprite.Group()
-
-        # Make the walls. (x_pos, y_pos, width, height)
         self.wall_list = pygame.sprite.Group()
+        self.enemy_list = pygame.sprite.Group()
+        self.winning_cube = pygame.sprite.Group()
 
+class Level1(BaseLevel):
+    def __init__(self):
+        super().__init__()
+        # Make the walls. (x_pos, y_pos, width, height)
         wall1 = Wall(0, 0, 10, 600)
         wall2 = Wall(10, 0, 790, 10)
         wall3 = Wall(10, 200, 100, 10)
@@ -128,25 +158,46 @@ class Level1():
         self.level_sprite_list.add(self.wall_list)
 
         # Create enemies
-        self.enemy_list = pygame.sprite.Group()
-
         enemy1 = Enemy(200, 200)
         enemy2 = Enemy(300, 300)
         enemy3 = Enemy(400, 400)
         self.enemy_list.add(enemy1, enemy2, enemy3)
         self.level_sprite_list.add(self.enemy_list)
 
-        self.winning_rect = pygame.Rect(700, 500, 50, 50)
-        self.level_sprite_list.add(self.winning_rect)
+        # Create winning block
+        self.winning = WinningCube(500, 300)
+        self.winning_cube.add(self.winning)
+        self.level_sprite_list.add(self.winning_cube)
 
 
-class Level2():
+class Level2(BaseLevel):
     def __init__(self):
-        self.level_sprite_list = pygame.sprite.Group()
-
+        super().__init__()
         # Make the walls. (x_pos, y_pos, width, height)
-        self.wall_list = pygame.sprite.Group()
+        wall1 = Wall(10, 0, 10, 600)
+        wall2 = Wall(110, 0, 790, 10)
+        wall3 = Wall(110, 200, 100, 10)
+        wall4 = Wall(2010, 200, 100, 10)
+        wall5 = Wall(3100, 400, 200, 50)
+        self.wall_list.add(wall1, wall2, wall3, wall4, wall5)
+        self.level_sprite_list.add(self.wall_list)
 
+        # Create enemies
+        enemy1 = Enemy(200, 200)
+        enemy2 = Enemy(300, 300)
+        enemy3 = Enemy(400, 400)
+        self.enemy_list.add(enemy1, enemy2, enemy3)
+        self.level_sprite_list.add(self.enemy_list)
+
+        # Create winning block
+        self.winning = WinningCube(500, 300)
+        self.winning_cube.add(self.winning)
+        self.level_sprite_list.add(self.winning_cube)
+
+class Level3(BaseLevel):
+    def __init__(self):
+        super().__init__()
+        # Make the walls. (x_pos, y_pos, width, height)
         wall1 = Wall(0, 0, 10, 600)
         wall2 = Wall(10, 0, 790, 10)
         wall3 = Wall(10, 200, 100, 10)
@@ -156,36 +207,13 @@ class Level2():
         self.level_sprite_list.add(self.wall_list)
 
         # Create enemies
-        self.enemy_list = pygame.sprite.Group()
-
         enemy1 = Enemy(200, 200)
         enemy2 = Enemy(300, 300)
         enemy3 = Enemy(400, 400)
         self.enemy_list.add(enemy1, enemy2, enemy3)
         self.level_sprite_list.add(self.enemy_list)
-        pass
 
-class Level3():
-    def __init__(self):
-        self.level_sprite_list = pygame.sprite.Group()
-
-        # Make the walls. (x_pos, y_pos, width, height)
-        self.wall_list = pygame.sprite.Group()
-
-        wall1 = Wall(0, 0, 10, 600)
-        wall2 = Wall(10, 0, 790, 10)
-        wall3 = Wall(10, 200, 100, 10)
-        wall4 = Wall(200, 200, 100, 10)
-        wall5 = Wall(300, 400, 200, 50)
-        self.wall_list.add(wall1, wall2, wall3, wall4, wall5)
-        self.level_sprite_list.add(self.wall_list)
-
-        # Create enemies
-        self.enemy_list = pygame.sprite.Group()
-
-        enemy1 = Enemy(200, 200)
-        enemy2 = Enemy(300, 300)
-        enemy3 = Enemy(400, 400)
-        self.enemy_list.add(enemy1, enemy2, enemy3)
-        self.level_sprite_list.add(self.enemy_list)
-        pass
+        # Create winning block
+        self.winning = WinningCube(500, 300)
+        self.winning_cube.add(self.winning)
+        self.level_sprite_list.add(self.winning_cube)
