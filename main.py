@@ -7,7 +7,7 @@ BACKGROUND = (0, 154, 255)
 SCREEN_WIDTH = 1280
 SCREEN_HEIGHT = 720
 
-# Create an 1280x720 sized screen
+# Create a 1280x720 sized screen
 screen = pygame.display.set_mode([SCREEN_WIDTH, SCREEN_HEIGHT])
 
 # Set the title of the window
@@ -27,26 +27,29 @@ pygame.init()
 all_sprite_list = pygame.sprite.Group()
 
 levels = [Level1(), Level2(), Level3()]
-current_level = 0
 
 # Create the player paddle object
 player = Player(50, 50)
-player.walls = levels[current_level].wall_list
-player.enemies = levels[current_level].enemy_list
 
 all_sprite_list.add(player)
 
 clock = pygame.time.Clock()
 
 for level in range(len(levels)):
+    player.win = levels[level].winning
+    player.walls = levels[level].wall_list
+    player.enemies = levels[level].enemy_list
     all_sprite_list.add(levels[level].level_sprite_list)
-
     done = False
     while not done:
+
+        if player.win == True:
+            break
+
+
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 done = True
-
 
             elif event.type == pygame.KEYDOWN:
                 if event.key == pygame.K_a:
@@ -99,8 +102,9 @@ for level in range(len(levels)):
 
     all_sprite_list.remove(levels[level].level_sprite_list)
 
-    if done == True:
+#TODO: Fix this
+    '''if done:
         pygame.quit()
-        break
+        break'''
 
 pygame.quit()
