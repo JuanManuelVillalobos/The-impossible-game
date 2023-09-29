@@ -2,6 +2,7 @@ import pygame
 from classes import Player,Wall,Enemy
 
 
+
 BACKGROUND = (0,154,255)
 
 # Screen dimensions
