@@ -136,49 +136,56 @@ class Level1():
         self.enemy_list.add(enemy1, enemy2, enemy3)
         self.level_sprite_list.add(self.enemy_list)
 
+        self.winning_rect = pygame.Rect(700, 500, 50, 50)
+        self.level_sprite_list.add(self.winning_rect)
+
 
 class Level2():
-    def draw(self):
+    def __init__(self):
+        self.level_sprite_list = pygame.sprite.Group()
+
         # Make the walls. (x_pos, y_pos, width, height)
-        wall_list = pygame.sprite.Group()
+        self.wall_list = pygame.sprite.Group()
 
         wall1 = Wall(0, 0, 10, 600)
         wall2 = Wall(10, 0, 790, 10)
         wall3 = Wall(10, 200, 100, 10)
         wall4 = Wall(200, 200, 100, 10)
         wall5 = Wall(300, 400, 200, 50)
-        wall_list.add(wall1, wall2, wall3, wall4, wall5)
-        all_sprite_list.add(wall_list)
+        self.wall_list.add(wall1, wall2, wall3, wall4, wall5)
+        self.level_sprite_list.add(self.wall_list)
 
         # Create enemies
-        enemy_list = pygame.sprite.Group()
+        self.enemy_list = pygame.sprite.Group()
 
         enemy1 = Enemy(200, 200)
         enemy2 = Enemy(300, 300)
         enemy3 = Enemy(400, 400)
-        enemy_list.add(enemy1, enemy2, enemy3)
-        all_sprite_list.add(enemy_list)
+        self.enemy_list.add(enemy1, enemy2, enemy3)
+        self.level_sprite_list.add(self.enemy_list)
         pass
 
 class Level3():
-    def draw(self):
+    def __init__(self):
+        self.level_sprite_list = pygame.sprite.Group()
+
         # Make the walls. (x_pos, y_pos, width, height)
-        wall_list = pygame.sprite.Group()
+        self.wall_list = pygame.sprite.Group()
 
         wall1 = Wall(0, 0, 10, 600)
         wall2 = Wall(10, 0, 790, 10)
         wall3 = Wall(10, 200, 100, 10)
         wall4 = Wall(200, 200, 100, 10)
         wall5 = Wall(300, 400, 200, 50)
-        wall_list.add(wall1, wall2, wall3, wall4, wall5)
-        all_sprite_list.add(wall_list)
+        self.wall_list.add(wall1, wall2, wall3, wall4, wall5)
+        self.level_sprite_list.add(self.wall_list)
 
         # Create enemies
-        enemy_list = pygame.sprite.Group()
+        self.enemy_list = pygame.sprite.Group()
 
         enemy1 = Enemy(200, 200)
         enemy2 = Enemy(300, 300)
         enemy3 = Enemy(400, 400)
-        enemy_list.add(enemy1, enemy2, enemy3)
-        all_sprite_list.add(enemy_list)
+        self.enemy_list.add(enemy1, enemy2, enemy3)
+        self.level_sprite_list.add(self.enemy_list)
         pass

@@ -15,8 +15,7 @@ pygame.display.set_caption('Worlds hardest game')
 
 
 # Handle movement of enemies
-def enemy_handler(x, y):
-    global enemy_list
+def enemy_handler(x, y, enemy_list):
     for enemy in enemy_list:
         enemy.changespeed(x, y)
 
@@ -40,62 +39,65 @@ all_sprite_list.add(player)
 clock = pygame.time.Clock()
 
 done = False
-
-while not done:
-
-    for event in pygame.event.get():
-        if event.type == pygame.QUIT:
-            done = True
-
-        elif event.type == pygame.KEYDOWN:
-            if event.key == pygame.K_a:
-                player.changespeed(-3, 0)
-            elif event.key == pygame.K_d:
-                player.changespeed(3, 0)
-            elif event.key == pygame.K_w:
-                player.changespeed(0, -3)
-            elif event.key == pygame.K_s:
-                player.changespeed(0, 3)
-
-            elif event.key == pygame.K_LEFT:
-                enemy_handler(-3, 0)
-            elif event.key == pygame.K_RIGHT:
-                enemy_handler(3, 0)
-            elif event.key == pygame.K_UP:
-                enemy_handler(0, -3)
-            elif event.key == pygame.K_DOWN:
-                enemy_handler(0, 3)
-
-        elif event.type == pygame.KEYUP:
-            if event.key == pygame.K_a:
-                player.changespeed(3, 0)
-            elif event.key == pygame.K_d:
-                player.changespeed(-3, 0)
-            elif event.key == pygame.K_w:
-                player.changespeed(0, 3)
-            elif event.key == pygame.K_s:
-                player.changespeed(0, -3)
+for level in range(len(levels)):
+    all_sprite_list.add(levels[level].level_sprite_list)
+    while not done:
 
 
-            elif event.key == pygame.K_LEFT:
-                enemy_handler(3, 0)
-            elif event.key == pygame.K_RIGHT:
-                enemy_handler(-3, 0)
-            elif event.key == pygame.K_UP:
-                enemy_handler(0, 3)
-            elif event.key == pygame.K_DOWN:
-                enemy_handler(0, -3)
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                done = True
+                break
 
-    all_sprite_list.update()
+            elif event.type == pygame.KEYDOWN:
+                if event.key == pygame.K_a:
+                    player.changespeed(-3, 0)
+                elif event.key == pygame.K_d:
+                    player.changespeed(3, 0)
+                elif event.key == pygame.K_w:
+                    player.changespeed(0, -3)
+                elif event.key == pygame.K_s:
+                    player.changespeed(0, 3)
 
-    screen.fill(BACKGROUND)
+                elif event.key == pygame.K_LEFT:
+                    enemy_handler(-3, 0, levels[level].enemy_list)
+                elif event.key == pygame.K_RIGHT:
+                    enemy_handler(3, 0, levels[level].enemy_list)
+                elif event.key == pygame.K_UP:
+                    enemy_handler(0, -3, levels[level].enemy_list)
+                elif event.key == pygame.K_DOWN:
+                    enemy_handler(0, 3, levels[level].enemy_list)
 
-    all_sprite_list.draw(screen)
+            elif event.type == pygame.KEYUP:
+                if event.key == pygame.K_a:
+                    player.changespeed(3, 0)
+                elif event.key == pygame.K_d:
+                    player.changespeed(-3, 0)
+                elif event.key == pygame.K_w:
+                    player.changespeed(0, 3)
+                elif event.key == pygame.K_s:
+                    player.changespeed(0, -3)
 
-    levels[current_level].draw(screen)
 
-    pygame.display.flip()
+                elif event.key == pygame.K_LEFT:
+                    enemy_handler(3, 0, levels[level].enemy_list)
+                elif event.key == pygame.K_RIGHT:
+                    enemy_handler(-3, 0, levels[level].enemy_list)
+                elif event.key == pygame.K_UP:
+                    enemy_handler(0, 3, levels[level].enemy_list)
+                elif event.key == pygame.K_DOWN:
+                    enemy_handler(0, -3, levels[level].enemy_list)
 
-    clock.tick(60)
+        all_sprite_list.update()
+
+        screen.fill(BACKGROUND)
+
+        all_sprite_list.draw(screen)
+
+        pygame.display.flip()
+
+        clock.tick(60)
+
+    all_sprite_list.remove(levels[level].level_sprite_list)
 
 pygame.quit()
