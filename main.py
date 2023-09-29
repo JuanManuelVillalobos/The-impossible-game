@@ -31,8 +31,6 @@ levels = [Level1(), Level2(), Level3()]
 # Create the player paddle object
 player = Player(50, 50)
 
-all_sprite_list.add(player)
-
 clock = pygame.time.Clock()
 
 for level in range(len(levels)):
@@ -40,6 +38,7 @@ for level in range(len(levels)):
     player.walls = levels[level].wall_list
     player.enemies = levels[level].enemy_list
     all_sprite_list.add(levels[level].level_sprite_list)
+    all_sprite_list.add(player)
     done = False
     while not done:
 
@@ -101,6 +100,7 @@ for level in range(len(levels)):
         clock.tick(60)
 
     all_sprite_list.remove(levels[level].level_sprite_list)
+    all_sprite_list.remove(player)
 
 #TODO: Fix this
     '''if done:
