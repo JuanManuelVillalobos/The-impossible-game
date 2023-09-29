@@ -1,5 +1,5 @@
 import pygame
-from classes import Player, Level1, Level3, Level3
+from classes import Player, Level1, Level2, Level3
 
 BACKGROUND = (0, 154, 255)
 
@@ -26,7 +26,7 @@ pygame.init()
 # List to hold all the sprites
 all_sprite_list = pygame.sprite.Group()
 
-levels = [Level1(), Level3(), Level3()]
+levels = [Level1(), Level2(), Level3()]
 current_level = 0
 
 # Create the player paddle object
@@ -38,16 +38,15 @@ all_sprite_list.add(player)
 
 clock = pygame.time.Clock()
 
-done = False
 for level in range(len(levels)):
     all_sprite_list.add(levels[level].level_sprite_list)
+
+    done = False
     while not done:
-
-
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 done = True
-                break
+
 
             elif event.type == pygame.KEYDOWN:
                 if event.key == pygame.K_a:
@@ -99,5 +98,9 @@ for level in range(len(levels)):
         clock.tick(60)
 
     all_sprite_list.remove(levels[level].level_sprite_list)
+
+    if done == True:
+        pygame.quit()
+        break
 
 pygame.quit()
