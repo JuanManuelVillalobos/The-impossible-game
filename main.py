@@ -1,5 +1,5 @@
 import pygame
-from classes import Player, Level1, Level2, Level3
+from classes import Player, Level1, Level2
 
 BACKGROUND = (0, 154, 255)
 
@@ -11,7 +11,7 @@ SCREEN_HEIGHT = 720
 screen = pygame.display.set_mode([SCREEN_WIDTH, SCREEN_HEIGHT])
 
 # Set the title of the window
-pygame.display.set_caption('Worlds hardest game')
+pygame.display.set_caption("World's Hardest Game")
 
 
 # Handle movement of enemies
@@ -26,10 +26,10 @@ pygame.init()
 # List to hold all the sprites
 all_sprite_list = pygame.sprite.Group()
 
-levels = [Level1(), Level2(), Level3()]
+levels = [Level1(), Level2()]
 
 # Create the player paddle object
-player = Player(50, 50)
+player = Player(70, 220)
 
 clock = pygame.time.Clock()
 
