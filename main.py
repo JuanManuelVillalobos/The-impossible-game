@@ -13,7 +13,6 @@ screen = pygame.display.set_mode([SCREEN_WIDTH, SCREEN_HEIGHT])
 # Set the title of the window
 pygame.display.set_caption('Worlds hardest game')
 
-
 # Handle movement of enemies
 def enemy_handler(x, y, enemy_list):
     for enemy in enemy_list:
