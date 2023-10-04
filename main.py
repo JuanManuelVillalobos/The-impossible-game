@@ -4,14 +4,14 @@ from classes import Player, Level1, Level2
 BACKGROUND = (0, 154, 255)
 
 # Screen dimensions
-SCREEN_WIDTH = 1280
-SCREEN_HEIGHT = 720
+SCREEN_WIDTH = 750
+SCREEN_HEIGHT = 450
 
 # Create a 1280x720 sized screen
 screen = pygame.display.set_mode([SCREEN_WIDTH, SCREEN_HEIGHT])
 
 # Set the title of the window
-pygame.display.set_caption("World's Hardest Game")
+pygame.display.set_caption("The Impossible Game")
 
 
 # Handle movement of enemies
