@@ -4,6 +4,9 @@ WHITE = (255, 255, 255)
 BLUE = (50, 50, 255)
 GREEN = (0, 255, 0)
 
+highScore = open(HighScores.txt, 'r+') #open file for reading and writing
+name = 'Juanma'
+
 
 class Player(pygame.sprite.Sprite):
     """ This class represents the red square that the player
@@ -48,8 +51,8 @@ class Player(pygame.sprite.Sprite):
         self.rect.x += self.change_x
 
         # Did this update cause us to hit a wall?
-        block_hit_list = pygame.sprite.spritecollide(self, self.walls, False)
-        for block in block_hit_list:
+        blockHitList = pygame.sprite.spritecollide(self, self.walls, False)
+        for block in blockHitList:
             # If we are moving right, set our right side to the left side of
             # the item we hit
             if self.change_x > 0:
@@ -61,9 +64,10 @@ class Player(pygame.sprite.Sprite):
         # Move up/down
         self.rect.y += self.change_y
 
+
         # Check and see if we hit anything
-        block_hit_list = pygame.sprite.spritecollide(self, self.walls, False)
-        for block in block_hit_list:
+        blockHitList = pygame.sprite.spritecollide(self, self.walls, False)
+        for block in blockHitList:
 
             # Reset our position based on the top/bottom of the object.
             if self.change_y > 0:
@@ -72,15 +76,15 @@ class Player(pygame.sprite.Sprite):
                 self.rect.top = block.rect.bottom
 
         # Check and see if we hit an enemy
-        enemy_hit_list = pygame.sprite.spritecollide(self, self.enemies, False)
-        for enemy in enemy_hit_list:
+        enemyHitList = pygame.sprite.spritecollide(self, self.enemies, False)
+        for enemy in enemyHitList:
             # Reset player:
             self.rect.x = self.respawn.x
             self.rect.y = self.respawn.y
 
     def win(self):
-        winning_cube_hit_list = pygame.sprite.spritecollide(self, self.winning_cube, False)
-        for winning_cube in winning_cube_hit_list:
+        winningCubeHitList = pygame.sprite.spritecollide(self, self.winning_cube, False)
+        for winning_cube in winningCubeHitList:
             self.win = True
 
 
@@ -245,3 +249,22 @@ class Level3(BaseLevel):
         self.winning = WinningCube(500, 300)
         self.winning_cube.add(self.winning)
         self.level_sprite_list.add(self.winning_cube)
+
+
+class HighScore():
+    # Constructor function
+    def __init__(self):
+        self.score = 0
+        self.high_score = 0
+
+        highScores = highScore.readlines()
+
+        for line in highScores:
+            if line == name:
+                self.high_score = int(highScores[highScores.index(line) + 1])
+                break
+
+def update(self):
+        if self.score > self.high_score:
+            self.high_score = self.score
+            highScore.write(name + '\n' + str(self.high_score))

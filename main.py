@@ -106,5 +106,5 @@ for level in range(len(levels)):
     '''if done:
         pygame.quit()
         break'''
-
+HighScore.update()
 pygame.quit()
