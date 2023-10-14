@@ -4,7 +4,6 @@ WHITE = (255, 255, 255)
 BLUE = (50, 50, 255)
 GREEN = (0, 255, 0)
 
-highScore = open(HighScores.txt, 'r+') #open file for reading and writing
 name = 'Juanma'
 
 
