@@ -15,10 +15,6 @@ pygame.display.set_caption("The Impossible Game")
 
 
 # Handle movement of enemies
-def enemy_handler(x,y,enemy_list):
-    for enemy in enemy_list:
-        enemy.changespeed(x,y)
-
 def enemy_mover(enemy_list):
     for enemy in enemy_list:
         enemy.move()
@@ -68,15 +64,6 @@ for level in range(len(levels)):
                 elif event.key == pygame.K_s:
                     player.changespeed(0, 3)
 
-                elif event.key == pygame.K_LEFT:
-                    enemy_handler(-3, 0, levels[level].enemy_list)
-                elif event.key == pygame.K_RIGHT:
-                    enemy_handler(3, 0, levels[level].enemy_list)
-                elif event.key == pygame.K_UP:
-                    enemy_handler(0, -3, levels[level].enemy_list)
-                elif event.key == pygame.K_DOWN:
-                    enemy_handler(0, 3, levels[level].enemy_list)
-
             elif event.type == pygame.KEYUP:
                 if event.key == pygame.K_a:
                     player.changespeed(3, 0)
@@ -86,16 +73,6 @@ for level in range(len(levels)):
                     player.changespeed(0, 3)
                 elif event.key == pygame.K_s:
                     player.changespeed(0, -3)
-
-
-                elif event.key == pygame.K_LEFT:
-                    enemy_handler(3, 0, levels[level].enemy_list)
-                elif event.key == pygame.K_RIGHT:
-                    enemy_handler(-3, 0, levels[level].enemy_list)
-                elif event.key == pygame.K_UP:
-                    enemy_handler(0, 3, levels[level].enemy_list)
-                elif event.key == pygame.K_DOWN:
-                    enemy_handler(0, -3, levels[level].enemy_list)
 
         enemy_mover(levels[level].enemy_list)
 

@@ -130,13 +130,8 @@ class Enemy(pygame.sprite.Sprite):
         self.change_x = 0
         self.change_y = 0
 
-    def changespeed(self, x, y):
-        """ Change the speed of the enemy. """
-        self.change_x += x
-        self.change_y += y
-
     def move(self):
-        """ Change the speed of the enemy. """
+        """ Move the enemy. """
         position_x = self.rect.center[0]
         position_y = self.rect.center[1]
         finalPointDifferencePosition_x = self.finalPosition[0] - position_x
