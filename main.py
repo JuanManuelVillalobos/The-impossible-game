@@ -1,5 +1,5 @@
 import pygame
-from classes import Player, Level1#, Level2
+from classes import Player, Level1, Level2
 
 BACKGROUND = (0, 154, 255)
 
@@ -23,14 +23,13 @@ def enemy_mover(enemy_list):
     for enemy in enemy_list:
         enemy.move()
 
-
 # Call this function so the Pygame library can initialize itself
 pygame.init()
 
 # List to hold all the sprites
 all_sprite_list = pygame.sprite.Group()
 
-levels = [Level1(), 'Level2()']
+levels = [Level1(), Level2()]
 
 # Create the player paddle object
 player = Player(70, 220)
@@ -38,13 +37,18 @@ player = Player(70, 220)
 clock = pygame.time.Clock()
 
 for level in range(len(levels)):
-    player.win = levels[level].winning
+    player.respawn.x = levels[level].playerRespawn.x
+    player.respawn.y = levels[level].playerRespawn.y
+    player.winning_cube = levels[level].winning_cube
     player.walls = levels[level].wall_list
     player.enemies = levels[level].enemy_list
     all_sprite_list.add(levels[level].level_sprite_list)
     all_sprite_list.add(player)
+    player.reset()
     done = False
+    player.win = False
     while not done:
+
 
         if player.win == True:
             break
@@ -103,14 +107,15 @@ for level in range(len(levels)):
 
         pygame.display.flip()
 
+        player.winner()
+
         clock.tick(60)
 
     all_sprite_list.remove(levels[level].level_sprite_list)
     all_sprite_list.remove(player)
 
-#TODO: Fix this
-    '''if done:
+    if done:
         pygame.quit()
-        break'''
+        break
 HighScore.update()
 pygame.quit()
