@@ -4,21 +4,20 @@ from classes import Player, Level1, Level2
 BACKGROUND = (0, 154, 255)
 
 # Screen dimensions
-SCREEN_WIDTH = 1280
-SCREEN_HEIGHT = 720
+SCREEN_WIDTH = 750
+SCREEN_HEIGHT = 450
 
 # Create a 1280x720 sized screen
 screen = pygame.display.set_mode([SCREEN_WIDTH, SCREEN_HEIGHT])
 
 # Set the title of the window
-pygame.display.set_caption("World's Hardest Game")
+pygame.display.set_caption("The Impossible Game")
 
 
 # Handle movement of enemies
-def enemy_handler(x, y, enemy_list):
+def enemy_mover(enemy_list):
     for enemy in enemy_list:
-        enemy.changespeed(x, y)
-
+        enemy.move()
 
 # Call this function so the Pygame library can initialize itself
 pygame.init()
@@ -34,13 +33,18 @@ player = Player(70, 220)
 clock = pygame.time.Clock()
 
 for level in range(len(levels)):
-    player.win = levels[level].winning
+    player.respawn.x = levels[level].playerRespawn.x
+    player.respawn.y = levels[level].playerRespawn.y
+    player.winning_cube = levels[level].winning_cube
     player.walls = levels[level].wall_list
     player.enemies = levels[level].enemy_list
     all_sprite_list.add(levels[level].level_sprite_list)
     all_sprite_list.add(player)
+    player.reset()
     done = False
+    player.win = False
     while not done:
+
 
         if player.win == True:
             break
@@ -60,15 +64,6 @@ for level in range(len(levels)):
                 elif event.key == pygame.K_s:
                     player.changespeed(0, 3)
 
-                elif event.key == pygame.K_LEFT:
-                    enemy_handler(-3, 0, levels[level].enemy_list)
-                elif event.key == pygame.K_RIGHT:
-                    enemy_handler(3, 0, levels[level].enemy_list)
-                elif event.key == pygame.K_UP:
-                    enemy_handler(0, -3, levels[level].enemy_list)
-                elif event.key == pygame.K_DOWN:
-                    enemy_handler(0, 3, levels[level].enemy_list)
-
             elif event.type == pygame.KEYUP:
                 if event.key == pygame.K_a:
                     player.changespeed(3, 0)
@@ -79,15 +74,7 @@ for level in range(len(levels)):
                 elif event.key == pygame.K_s:
                     player.changespeed(0, -3)
 
-
-                elif event.key == pygame.K_LEFT:
-                    enemy_handler(3, 0, levels[level].enemy_list)
-                elif event.key == pygame.K_RIGHT:
-                    enemy_handler(-3, 0, levels[level].enemy_list)
-                elif event.key == pygame.K_UP:
-                    enemy_handler(0, 3, levels[level].enemy_list)
-                elif event.key == pygame.K_DOWN:
-                    enemy_handler(0, -3, levels[level].enemy_list)
+        enemy_mover(levels[level].enemy_list)
 
         all_sprite_list.update()
 
@@ -97,14 +84,15 @@ for level in range(len(levels)):
 
         pygame.display.flip()
 
+        player.winner()
+
         clock.tick(60)
 
     all_sprite_list.remove(levels[level].level_sprite_list)
     all_sprite_list.remove(player)
 
-#TODO: Fix this
-    '''if done:
+    if done:
         pygame.quit()
-        break'''
-
+        break
+HighScore.update()
 pygame.quit()
