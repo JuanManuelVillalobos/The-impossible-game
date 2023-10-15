@@ -1,5 +1,5 @@
 import pygame
-from classes import Player, Level1, Level2
+from classes import Player, Level1#, Level2
 
 BACKGROUND = (0, 154, 255)
 
@@ -15,9 +15,13 @@ pygame.display.set_caption("The Impossible Game")
 
 
 # Handle movement of enemies
-def enemy_handler(x, y, enemy_list):
+def enemy_handler(x,y,enemy_list):
     for enemy in enemy_list:
-        enemy.changespeed(x, y)
+        enemy.changespeed(x,y)
+
+def enemy_mover(enemy_list):
+    for enemy in enemy_list:
+        enemy.move()
 
 
 # Call this function so the Pygame library can initialize itself
@@ -26,7 +30,7 @@ pygame.init()
 # List to hold all the sprites
 all_sprite_list = pygame.sprite.Group()
 
-levels = [Level1(), Level2()]
+levels = [Level1(), 'Level2()']
 
 # Create the player paddle object
 player = Player(70, 220)
@@ -88,6 +92,8 @@ for level in range(len(levels)):
                     enemy_handler(0, 3, levels[level].enemy_list)
                 elif event.key == pygame.K_DOWN:
                     enemy_handler(0, -3, levels[level].enemy_list)
+
+        enemy_mover(levels[level].enemy_list)
 
         all_sprite_list.update()
 

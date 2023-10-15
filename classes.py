@@ -106,13 +106,17 @@ class Wall(pygame.sprite.Sprite):
 
 
 class Enemy(pygame.sprite.Sprite):
-    def __init__(self, x, y):
+    def __init__(self, starting_x, starting_y, final_x, final_y, s):
         super().__init__()
+        self.startingPosition = pygame.Vector2(starting_x, starting_y)
+        self.finalPosition = pygame.Vector2(final_x, final_y)
         self.radius = 5
         self.image = pygame.Surface((2 * self.radius, 2 * self.radius), pygame.SRCALPHA)
         pygame.draw.circle(self.image, WHITE, (self.radius, self.radius), self.radius)
         self.rect = self.image.get_rect()
-        self.rect.center = pygame.Vector2(x, y)
+        self.rect.center = pygame.Vector2(starting_x, starting_y)
+        self.step = s
+        self.inFinalPoint = False
 
         # Set speed vector
         self.change_x = 0
@@ -122,6 +126,46 @@ class Enemy(pygame.sprite.Sprite):
         """ Change the speed of the enemy. """
         self.change_x += x
         self.change_y += y
+
+    def move(self):
+        """ Change the speed of the enemy. """
+        position_x = self.rect.center[0]
+        position_y = self.rect.center[1]
+        finalPointDifferencePosition_x = self.finalPosition[0] - position_x
+        finalPointDifferencePosition_y = self.finalPosition[1] - position_y
+        startingPointDifferencePosition_x = self.startingPosition[0] - position_x
+        startingPointDifferencePosition_y = self.startingPosition[1] - position_y
+        if abs(finalPointDifferencePosition_x) <= self.step and abs(finalPointDifferencePosition_y) <= self.step :
+            self.inFinalPoint = True
+
+        elif abs(startingPointDifferencePosition_x) <= self.step and abs(startingPointDifferencePosition_y) <= self.step:
+            self.inFinalPoint = False
+
+
+
+
+
+        if self.inFinalPoint == False:
+            if finalPointDifferencePosition_x > 0:
+                self.change_x = self.step
+            elif finalPointDifferencePosition_x < 0:
+                self.change_x = self.step * -1
+            if finalPointDifferencePosition_y > 0:
+                self.change_y = self.step
+            elif finalPointDifferencePosition_y < 0:
+                self.change_y = self.step * -1
+
+        elif self.inFinalPoint == True:
+            if startingPointDifferencePosition_x > 0:
+                self.change_x = self.step
+            elif startingPointDifferencePosition_x < 0:
+                self.change_x = self.step * -1
+            if startingPointDifferencePosition_y > 0:
+                self.change_y = self.step
+            elif startingPointDifferencePosition_y < 0:
+                self.change_y = self.step * -1
+
+
 
     def update(self):
         """ Update the enemy position. """
@@ -172,10 +216,10 @@ class Level1(BaseLevel):
         self.level_sprite_list.add(self.wall_list)
 
         # Create enemies
-        enemy1 = Enemy(227, 212)
-        enemy2 = Enemy(227, 289)
-        enemy3 = Enemy(484, 177)
-        enemy4 = Enemy(484, 252)
+        enemy1 = Enemy(227, 212, 484, 212, 3)
+        enemy2 = Enemy(227, 289, 484, 289, 2)
+        enemy3 = Enemy(484, 177, 227, 177, 4)
+        enemy4 = Enemy(484, 252, 227, 252, 7)
         self.enemy_list.add(enemy1, enemy2, enemy3, enemy4)
         self.level_sprite_list.add(self.enemy_list)
 
@@ -185,7 +229,7 @@ class Level1(BaseLevel):
         self.level_sprite_list.add(self.winning_cube)
 
 
-class Level2(BaseLevel):
+'''class Level2(BaseLevel):
     def __init__(self):
         super().__init__()
         # Make the walls. (x_pos, y_pos, width, height)
@@ -205,18 +249,18 @@ class Level2(BaseLevel):
         self.level_sprite_list.add(self.wall_list)
 
         # Create enemies
-        enemy1 = Enemy(166, 157)
-        enemy2 = Enemy(238, 157)
-        enemy3 = Enemy(310, 157)
-        enemy4 = Enemy(382, 157)
-        enemy5 = Enemy(454, 157)
-        enemy6 = Enemy(526, 157)
-        enemy7 = Enemy(203, 327)
-        enemy8 = Enemy(273, 327)
-        enemy9 = Enemy(343, 327)
-        enemy10 = Enemy(413, 327)
-        enemy11 = Enemy(483, 327)
-        enemy12 = Enemy(553, 327)
+        enemy1 = Enemy(166, 157,,
+        enemy2 = Enemy(238, 157,,
+        enemy3 = Enemy(310, 157,,
+        enemy4 = Enemy(382, 157,,
+        enemy5 = Enemy(454, 157,,
+        enemy6 = Enemy(526, 157,,
+        enemy7 = Enemy(203, 327,,
+        enemy8 = Enemy(273, 327,,
+        enemy9 = Enemy(343, 327,,
+        enemy10 = Enemy(413, 327,,
+        enemy11 = Enemy(483, 327,,
+        enemy12 = Enemy(553, 327,,
         self.enemy_list.add(enemy1, enemy2, enemy3, enemy4, enemy5, enemy6, enemy7, enemy8, enemy9, enemy10, enemy11, enemy12)
         self.level_sprite_list.add(self.enemy_list)
 
@@ -238,16 +282,16 @@ class Level3(BaseLevel):
         self.level_sprite_list.add(self.wall_list)
 
         # Create enemies
-        enemy1 = Enemy(200, 200)
-        enemy2 = Enemy(300, 300)
-        enemy3 = Enemy(400, 400)
+        enemy1 = Enemy(200, 200,,
+        enemy2 = Enemy(300, 300,,
+        enemy3 = Enemy(400, 400,,
         self.enemy_list.add(enemy1, enemy2, enemy3)
         self.level_sprite_list.add(self.enemy_list)
 
         # Create winning block
         self.winning = WinningCube(500, 300)
         self.winning_cube.add(self.winning)
-        self.level_sprite_list.add(self.winning_cube)
+        self.level_sprite_list.add(self.winning_cube)'''
 
 
 class HighScore():
