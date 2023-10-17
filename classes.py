@@ -34,13 +34,13 @@ class Player(pygame.sprite.Sprite):
         self.change_x = 0
         self.change_y = 0
 
-        #Groups of player
+        # Groups of player
         self.walls = None
+        self.enemies = None
         self.winning_cube = None
 
-        #Determine if cube won
+        # Determine if cube won
         self.win = False
-
 
     def changespeed(self, x, y):
         """ Change the speed of the player. """
@@ -53,8 +53,8 @@ class Player(pygame.sprite.Sprite):
         self.rect.x += self.change_x
 
         # Did this update cause us to hit a wall?
-        blockHitList = pygame.sprite.spritecollide(self, self.walls, False)
-        for block in blockHitList:
+        block_hit_list = pygame.sprite.spritecollide(self, self.walls, False)
+        for block in block_hit_list:
             # If we are moving right, set our right side to the left side of
             # the item we hit
             if self.change_x > 0:
@@ -66,10 +66,9 @@ class Player(pygame.sprite.Sprite):
         # Move up/down
         self.rect.y += self.change_y
 
-
         # Check and see if we hit anything
-        blockHitList = pygame.sprite.spritecollide(self, self.walls, False)
-        for block in blockHitList:
+        block_hit_list = pygame.sprite.spritecollide(self, self.walls, False)
+        for block in block_hit_list:
 
             # Reset our position based on the top/bottom of the object.
             if self.change_y > 0:
@@ -78,20 +77,19 @@ class Player(pygame.sprite.Sprite):
                 self.rect.top = block.rect.bottom
 
         # Check and see if we hit an enemy
-        enemyHitList = pygame.sprite.spritecollide(self, self.enemies, False)
-        for enemy in enemyHitList:
+        enemy_hit_list = pygame.sprite.spritecollide(self, self.enemies, False)
+        for _ in enemy_hit_list:
             # Reset player:
             self.rect.x = self.respawn.x
             self.rect.y = self.respawn.y
-
 
     def reset(self):
         self.rect.x = self.respawn.x
         self.rect.y = self.respawn.y
 
     def winner(self):
-        winningCubeHitList = pygame.sprite.spritecollide(self, self.winning_cube, False)
-        for winning_cube in winningCubeHitList:
+        winning_cube_hit_list = pygame.sprite.spritecollide(self, self.winning_cube, False)
+        for _ in winning_cube_hit_list:
             self.win = True
 
 
@@ -114,10 +112,14 @@ class Wall(pygame.sprite.Sprite):
 
 
 class Enemy(pygame.sprite.Sprite):
-    def __init__(self, starting_x, starting_y, final_x, final_y, step):
+    def __init__(self, starting_x, starting_y, final_x, final_y, step, stop1_x=0, stop1_y=0, stop2_x=0, stop2_y=0):
         super().__init__()
+        # Positions of enemy
         self.startingPosition = pygame.Vector2(starting_x, starting_y)
         self.finalPosition = pygame.Vector2(final_x, final_y)
+        self.stop1 = pygame.Vector2(stop1_x, stop1_y)
+        self.stop2 = pygame.Vector2(stop2_x, stop2_y)
+
         self.radius = 8
         self.image = pygame.Surface((2 * self.radius, 2 * self.radius), pygame.SRCALPHA)
         pygame.draw.circle(self.image, WHITE, (self.radius, self.radius), self.radius)
@@ -126,43 +128,85 @@ class Enemy(pygame.sprite.Sprite):
         self.step = step
         self.inFinalPoint = False
 
+        self.iteration = 0
+
         # Set speed vector
         self.change_x = 0
         self.change_y = 0
 
     def move(self):
         """ Move the enemy. """
+        if self.stop1[0] != 0 or self.stop1[1] and self.stop2[0] != 0 or self.stop2[1] != 0:
+            self.multiple_step_move()
+        else:
+            self.single_step_move(self.startingPosition[0], self.startingPosition[1], self.finalPosition[0],
+                                  self.finalPosition[1])
+
+    def single_step_move(self, starting_x, starting_y, final_x, final_y):
+        """ Move the enemy with a single set of initial and final points. """
         position_x = self.rect.center[0]
         position_y = self.rect.center[1]
-        finalPointDifferencePosition_x = self.finalPosition[0] - position_x
-        finalPointDifferencePosition_y = self.finalPosition[1] - position_y
-        startingPointDifferencePosition_x = self.startingPosition[0] - position_x
-        startingPointDifferencePosition_y = self.startingPosition[1] - position_y
-        if abs(finalPointDifferencePosition_x) <= self.step and abs(finalPointDifferencePosition_y) <= self.step :
+        final_point_difference_position_x = final_x - position_x
+        final_point_difference_position_y = final_y - position_y
+        starting_point_difference_position_x = starting_x - position_x
+        starting_point_difference_position_y = starting_y - position_y
+        if (abs(final_point_difference_position_x) <= self.step and
+                abs(final_point_difference_position_y) <= self.step):
             self.inFinalPoint = True
 
-        elif abs(startingPointDifferencePosition_x) <= self.step and abs(startingPointDifferencePosition_y) <= self.step:
+        elif abs(starting_point_difference_position_x) <= self.step and abs(
+                starting_point_difference_position_y) <= self.step:
             self.inFinalPoint = False
 
-        if self.inFinalPoint == True:
-            if startingPointDifferencePosition_x > 0:
+        if self.inFinalPoint:
+            if starting_point_difference_position_x > 0:
                 self.change_x = self.step
-            elif startingPointDifferencePosition_x < 0:
+            elif starting_point_difference_position_x < 0:
                 self.change_x = self.step * -1
-            if startingPointDifferencePosition_y > 0:
+            if starting_point_difference_position_y > 0:
                 self.change_y = self.step
-            elif startingPointDifferencePosition_y < 0:
+            elif starting_point_difference_position_y < 0:
                 self.change_y = self.step * -1
 
-        elif self.inFinalPoint == False:
-            if finalPointDifferencePosition_x > 0:
+        elif not self.inFinalPoint:
+            if final_point_difference_position_x > 0:
                 self.change_x = self.step
-            elif finalPointDifferencePosition_x < 0:
+            elif final_point_difference_position_x < 0:
                 self.change_x = self.step * -1
-            if finalPointDifferencePosition_y > 0:
+            if final_point_difference_position_y > 0:
                 self.change_y = self.step
-            elif finalPointDifferencePosition_y < 0:
+            elif final_point_difference_position_y < 0:
                 self.change_y = self.step * -1
+
+    def multiple_step_move(self):
+        stop1_x = self.stop1[0] + self.startingPosition[0]
+        stop1_y = self.stop1[1] + self.startingPosition[1]
+        stop2_x = self.stop2[0] + self.startingPosition[0]
+        stop2_y = self.stop2[1] + self.startingPosition[1]
+        final_x = [stop1_x, stop2_x, self.finalPosition[0], self.startingPosition[0]]
+        final_y = [stop1_y, stop2_y, self.finalPosition[1], self.startingPosition[1]]
+        position_x = self.rect.center[0]
+        position_y = self.rect.center[1]
+        final_point_difference_position_x = final_x[self.iteration] - position_x
+        final_point_difference_position_y = final_y[self.iteration] - position_y
+
+        if abs(final_point_difference_position_x) <= self.step and abs(final_point_difference_position_y) <= self.step:
+            if self.iteration + 1 == 4:
+                self.iteration = 0
+            else: self.iteration += 1
+
+        if abs(final_point_difference_position_x) <= self.step:
+            self.change_x = 0
+        elif final_point_difference_position_x > 0:
+            self.change_x = self.step
+        elif final_point_difference_position_x < 0:
+            self.change_x = self.step * -1
+        if abs(final_point_difference_position_y) <= self.step:
+            self.change_y = 0
+        elif final_point_difference_position_y > 0:
+            self.change_y = self.step
+        elif final_point_difference_position_y < 0:
+            self.change_y = self.step * -1
 
     def update(self):
         """ Update the enemy position. """
@@ -182,99 +226,6 @@ class WinningCube(pygame.sprite.Sprite):
         self.rect.y = y
         self.rect.x = x
 
-class BaseLevel():
-    def __init__(self):
-        self.level_sprite_list = pygame.sprite.Group()
-        self.wall_list = pygame.sprite.Group()
-        self.enemy_list = pygame.sprite.Group()
-        self.winning_cube = pygame.sprite.Group()
-        self.playerRespawn = pygame.Vector2()
-
-class Level1(BaseLevel):
-    def __init__(self):
-        super().__init__()
-        #Determine Player Respawn
-        self.playerRespawn.x = 70
-        self.playerRespawn.y = 220
-
-        # Make the walls. (x_pos, y_pos, width, height)
-        wall1 = Wall(22, 122, 110, 5)
-        wall2 = Wall(22, 122, 5, 220)
-        wall3 = Wall(22, 342, 185, 5)
-        wall4 = Wall(132, 122, 5, 185)
-        wall5 = Wall(132, 307, 40, 5)
-        wall6 = Wall(172, 157, 5, 150)
-        wall7 = Wall(207, 307, 5, 35)
-        wall8 = Wall(172, 157, 333, 5)
-        wall9 = Wall(207, 307, 335, 5)
-        wall10 = Wall(502, 122, 5, 35)
-        wall11 = Wall(542, 157, 5, 150)
-        wall12 = Wall(542, 157, 35, 5)
-        wall13 = Wall(502, 122, 190, 5)
-        wall14 = Wall(577, 157, 5, 185)
-        wall15 = Wall(692, 122, 5, 220)
-        wall16 = Wall(577, 342, 115, 5)
-        self.wall_list.add(wall1, wall2, wall3, wall4, wall5, wall6, wall7, wall8, wall9, wall10, wall11, wall12, wall13, wall14, wall15, wall16)
-        self.level_sprite_list.add(self.wall_list)
-
-        # Create enemies
-        enemy1 = Enemy(190, 212, 530, 212, 3)
-        enemy2 = Enemy(190, 289, 530, 289, 3)
-        enemy3 = Enemy(530, 177, 190, 177, 3)
-        enemy4 = Enemy(530, 252, 190, 252, 3)
-        self.enemy_list.add(enemy1, enemy2, enemy3, enemy4)
-        self.level_sprite_list.add(self.enemy_list)
-
-        # Create winning block
-        self.winning = WinningCube(632, 232)
-        self.winning_cube.add(self.winning)
-        self.level_sprite_list.add(self.winning_cube)
-
-
-class Level2(BaseLevel):
-    def __init__(self):
-        super().__init__()
-        #Determine Player Respawn
-        self.playerRespawn.x = 70
-        self.playerRespawn.y = 238
-
-        # Make the walls. (x_pos, y_pos, width, height)
-        wall1 = Wall(42, 207, 5, 70)
-        wall2 = Wall(684, 207, 5, 70)
-        wall3 = Wall(42, 207, 108, 5)
-        wall4 = Wall(576, 207, 108, 5)
-        wall5 = Wall(42, 277, 108, 5)
-        wall6 = Wall(576, 277, 108, 5)
-        wall7 = Wall(150, 133, 5, 74)
-        wall8 = Wall(576, 133, 5, 74)
-        wall9 = Wall(150, 277, 5, 73)
-        wall10 = Wall(576, 277, 5, 73)
-        wall11 = Wall(150, 133, 426, 5)
-        wall12 = Wall(150, 350, 426, 5)
-        self.wall_list.add(wall1, wall2, wall3, wall4, wall5, wall6, wall7, wall8, wall9, wall10, wall11, wall12)
-        self.level_sprite_list.add(self.wall_list)
-
-        # Create enemies
-        enemy1 = Enemy(176, 150,176, 340, 3)
-        enemy2 = Enemy(248, 150, 248, 340, 3)
-        enemy3 = Enemy(320, 150, 320, 340, 3)
-        enemy4 = Enemy(392, 150, 392, 340, 3)
-        enemy5 = Enemy(464, 150, 464, 340, 3)
-        enemy6 = Enemy(536, 150, 536, 340, 3)
-        enemy7 = Enemy(213, 340, 213, 150, 3)
-        enemy8 = Enemy(283, 340, 283, 150, 3)
-        enemy9 = Enemy(353, 340, 353, 150, 3)
-        enemy10 = Enemy(423, 340, 423, 150, 3)
-        enemy11 = Enemy(493, 340, 493, 150, 3)
-        enemy12 = Enemy(563, 340, 563, 150, 3)
-        self.enemy_list.add(enemy1, enemy2, enemy3, enemy4, enemy5, enemy6, enemy7, enemy8, enemy9, enemy10, enemy11, enemy12)
-        self.level_sprite_list.add(self.enemy_list)
-
-        # Create winning block
-        self.winning = WinningCube(630, 220)
-        self.winning_cube.add(self.winning)
-        self.level_sprite_list.add(self.winning_cube)
-
 
 class HighScore():
     # Constructor function
@@ -289,7 +240,8 @@ class HighScore():
                 self.high_score = int(highScores[highScores.index(line) + 1])
                 break
 
+
 def update(self):
-        if self.score > self.high_score:
-            self.high_score = self.score
-            highScore.write(name + '\n' + str(self.high_score))
+    if self.score > self.high_score:
+        self.high_score = self.score
+        highScore.write(name + '\n' + str(self.high_score))
