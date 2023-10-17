@@ -227,21 +227,37 @@ class WinningCube(pygame.sprite.Sprite):
         self.rect.x = x
 
 
-class HighScore():
-    # Constructor function
+class HighScore:
     def __init__(self):
-        self.score = 0
-        self.high_score = 0
+        pygame.init()
+        self.filename = "highscores.txt"
+        self.high_scores = self.read_high_scores()  # Read high scores once upon initialization
+        self.display_high_score = False
 
-        highScores = highScore.readlines()
+    def read_high_scores(self):
+        directory = r"C:\Users\HP\Documents\The-impossible-game"  # Replace with your actual directory path
+        file_name = "HighScores.txt"
 
-        for line in highScores:
-            if line == name:
-                self.high_score = int(highScores[highScores.index(line) + 1])
-                break
+        # Create the full file path
+        global file_path
+        file_path = os.path.join(directory, file_name)
+        with open(file_path, 'r') as file:
+            high_scores = [int(line.strip()) for line in file]
+            high_scores.sort(reverse=True)  # Sort in descending order
+            return high_scores
 
+    def update_high_scores(self, new_score):
+        self.high_scores.append(new_score)
+        self.high_scores.sort(reverse=True)
+        self.high_scores = self.high_scores[:1]  # Keep only the top high score
+        with open(file_path, "w") as file:
+            for score in self.high_scores:
+                file.write(f"{score}\n")
+        self.display_high_score = True
 
-def update(self):
-    if self.score > self.high_score:
-        self.high_score = self.score
-        highScore.write(name + '\n' + str(self.high_score))
+    def display_high_scores(self, screen):
+        if self.display_high_score:
+            font = pygame.font.Font(None, 36)
+            top_score_text = font.render(f"Top High Score: {self.high_scores[0]}", True, (250, 250, 250))
+            text_rect = top_score_text.get_rect(center=(screen.get_width() // 2, 50))
+            screen.blit(top_score_text, text_rect)
