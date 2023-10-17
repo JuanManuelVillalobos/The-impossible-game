@@ -1,5 +1,6 @@
 import pygame
-from classes import Player, Level1, Level2
+from levels import Level1, Level2, Level3
+from classes import Player
 
 BACKGROUND = (0, 154, 255)
 
@@ -25,7 +26,7 @@ pygame.init()
 # List to hold all the sprites
 all_sprite_list = pygame.sprite.Group()
 
-levels = [Level1(), Level2()]
+levels = [Level1(), Level2(), Level3()]
 
 # Create the player paddle object
 player = Player(70, 220)
@@ -41,6 +42,7 @@ for level in range(len(levels)):
     all_sprite_list.add(levels[level].level_sprite_list)
     all_sprite_list.add(player)
     player.reset()
+    player_speed = levels[level].playerSpeed
     done = False
     player.win = False
     while not done:
@@ -56,23 +58,23 @@ for level in range(len(levels)):
 
             elif event.type == pygame.KEYDOWN:
                 if event.key == pygame.K_a:
-                    player.changespeed(-3, 0)
+                    player.changespeed(-1 * player_speed, 0)
                 elif event.key == pygame.K_d:
-                    player.changespeed(3, 0)
+                    player.changespeed(player_speed, 0)
                 elif event.key == pygame.K_w:
-                    player.changespeed(0, -3)
+                    player.changespeed(0, -1 * player_speed)
                 elif event.key == pygame.K_s:
-                    player.changespeed(0, 3)
+                    player.changespeed(0, player_speed)
 
             elif event.type == pygame.KEYUP:
                 if event.key == pygame.K_a:
-                    player.changespeed(3, 0)
+                    player.changespeed(player_speed, 0)
                 elif event.key == pygame.K_d:
-                    player.changespeed(-3, 0)
+                    player.changespeed(-1 * player_speed, 0)
                 elif event.key == pygame.K_w:
-                    player.changespeed(0, 3)
+                    player.changespeed(0, player_speed)
                 elif event.key == pygame.K_s:
-                    player.changespeed(0, -3)
+                    player.changespeed(0, -1 * player_speed)
 
         enemy_mover(levels[level].enemy_list)
 
