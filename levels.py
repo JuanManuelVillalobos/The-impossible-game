@@ -1,6 +1,8 @@
 import pygame
-from classes import Wall, Enemy, WinningCube
-class BaseLevel():
+from classes import Player, Wall, Enemy, WinningCube, enemy_mover
+
+
+class BaseLevel:
     def __init__(self):
         self.level_sprite_list = pygame.sprite.Group()
         self.wall_list = pygame.sprite.Group()
@@ -10,13 +12,13 @@ class BaseLevel():
         self.playerSpeed = 2
         self.enemySpeed = 3
 
+
 class Level1(BaseLevel):
     def __init__(self):
         super().__init__()
-        #Determine Player Respawn
+        # Determine Player Respawn
         self.playerRespawn.x = 70
         self.playerRespawn.y = 220
-
 
         # Make the walls. (x_pos, y_pos, width, height)
         wall1 = Wall(22, 122, 110, 5)
@@ -35,7 +37,8 @@ class Level1(BaseLevel):
         wall14 = Wall(577, 157, 5, 185)
         wall15 = Wall(692, 122, 5, 220)
         wall16 = Wall(577, 342, 115, 5)
-        self.wall_list.add(wall1, wall2, wall3, wall4, wall5, wall6, wall7, wall8, wall9, wall10, wall11, wall12, wall13, wall14, wall15, wall16)
+        self.wall_list.add(wall1, wall2, wall3, wall4, wall5, wall6, wall7, wall8, wall9, wall10, wall11, wall12,
+                           wall13, wall14, wall15, wall16)
         self.level_sprite_list.add(self.wall_list)
 
         # Create enemies
@@ -55,10 +58,9 @@ class Level1(BaseLevel):
 class Level2(BaseLevel):
     def __init__(self):
         super().__init__()
-        #Determine Player Respawn
+        # Determine Player Respawn
         self.playerRespawn.x = 70
         self.playerRespawn.y = 238
-
 
         # Make the walls. (x_pos, y_pos, width, height)
         wall1 = Wall(42, 207, 5, 70)
@@ -77,7 +79,7 @@ class Level2(BaseLevel):
         self.level_sprite_list.add(self.wall_list)
 
         # Create enemies
-        enemy1 = Enemy(176, 150,176, 340, self.enemySpeed)
+        enemy1 = Enemy(176, 150, 176, 340, self.enemySpeed)
         enemy2 = Enemy(248, 150, 248, 340, self.enemySpeed)
         enemy3 = Enemy(320, 150, 320, 340, self.enemySpeed)
         enemy4 = Enemy(392, 150, 392, 340, self.enemySpeed)
@@ -89,13 +91,15 @@ class Level2(BaseLevel):
         enemy10 = Enemy(423, 340, 423, 150, self.enemySpeed)
         enemy11 = Enemy(493, 340, 493, 150, self.enemySpeed)
         enemy12 = Enemy(563, 340, 563, 150, self.enemySpeed)
-        self.enemy_list.add(enemy1, enemy2, enemy3, enemy4, enemy5, enemy6, enemy7, enemy8, enemy9, enemy10, enemy11, enemy12)
+        self.enemy_list.add(enemy1, enemy2, enemy3, enemy4, enemy5, enemy6, enemy7, enemy8, enemy9, enemy10, enemy11,
+                            enemy12)
         self.level_sprite_list.add(self.enemy_list)
 
         # Create winning block
         self.winning = WinningCube(630, 220)
         self.winning_cube.add(self.winning)
         self.level_sprite_list.add(self.winning_cube)
+
 
 class Level3(BaseLevel):
     def __init__(self):
@@ -104,7 +108,7 @@ class Level3(BaseLevel):
         self.playerRespawn.x = 35
         self.playerRespawn.y = 185
 
-        #Ovverdie enemy speed
+        # Ovverdie enemy speed
         self.enemySpeed = 2
 
         # Make the walls. (x_pos, y_pos, width, height)
@@ -128,34 +132,103 @@ class Level3(BaseLevel):
         wall18 = Wall(530, 163, 58, 5)
         wall19 = Wall(530, 221, 58, 5)
         wall20 = Wall(587, 163, 5, 58)
-        self.wall_list.add(wall1, wall2, wall3, wall4, wall5, wall6, wall7, wall8, wall9, wall10, wall11, wall12, wall13, wall14, wall15, wall16, wall17, wall18, wall19, wall20)
+        self.wall_list.add(wall1, wall2, wall3, wall4, wall5, wall6, wall7, wall8, wall9, wall10, wall11, wall12,
+                           wall13, wall14, wall15, wall16, wall17, wall18, wall19, wall20)
         self.level_sprite_list.add(self.wall_list)
 
         adder = 30
         # Create enemies
-        enemy1 = Enemy(85, 122, 85+adder, 122,self.enemySpeed, 0, adder, adder, adder)
-        enemy2 = Enemy(142, 1220, 142+adder, 1220,self.enemySpeed, 0, adder, adder,adder)
-        enemy3 = Enemy(314, 122, 314+adder, 122,self.enemySpeed, 0, adder, adder,adder)
-        enemy4 = Enemy(371, 122, 371+adder, 122,self.enemySpeed, 0, adder, adder,adder)
-        enemy5 = Enemy(428, 122, 428+adder, 122,self.enemySpeed, 0, adder, adder,adder)
-        enemy6 = Enemy(485, 122, 485+adder, 122,self.enemySpeed, 0, adder, adder,adder)
-        enemy7 = Enemy(85, 179, 85+adder, 179, self.enemySpeed, 0, adder, adder,adder)
-        enemy8 = Enemy(142, 179, 142+adder, 179,self.enemySpeed, 0, adder, adder,adder)
-        enemy9 = Enemy(256, 179, 256+adder, 179,self.enemySpeed, 0, adder, adder,adder)
-        enemy10 = Enemy(313, 179, 313+adder, 179,self.enemySpeed, 0, adder, adder,adder)
-        enemy11 = Enemy(427, 179, 427+adder, 179,self.enemySpeed, 0, adder, adder,adder)
-        enemy12 = Enemy(484, 179, 484+adder, 179,self.enemySpeed, 0, adder, adder,adder)
-        enemy13 = Enemy(85, 236, 85+adder, 236, self.enemySpeed, 0, adder, adder,adder)
-        enemy14 = Enemy(142, 236, 142+adder, 236,self.enemySpeed, 0, adder, adder,adder)
-        enemy15 = Enemy(199, 236, 199+adder, 236,self.enemySpeed, 0, adder, adder,adder)
-        enemy16 = Enemy(256, 236, 256+adder, 236,self.enemySpeed, 0, adder, adder,adder)
-        enemy17 = Enemy(313, 236, 313+adder, 236,self.enemySpeed, 0, adder, adder,adder)
-        enemy18 = Enemy(427, 236, 427+adder, 236,self.enemySpeed, 0, adder, adder,adder)
-        enemy19 = Enemy(484, 236, 484+adder, 236,self.enemySpeed, 0, adder, adder,adder)
-        self.enemy_list.add(enemy1, enemy2, enemy3, enemy4, enemy5, enemy6, enemy7, enemy8, enemy9, enemy10, enemy11, enemy12, enemy13, enemy14, enemy15, enemy16, enemy17, enemy18, enemy19)
+        enemy1 = Enemy(85, 122, 85 + adder, 122, self.enemySpeed, 0, adder, adder, adder)
+        enemy2 = Enemy(142, 1220, 142 + adder, 1220, self.enemySpeed, 0, adder, adder, adder)
+        enemy3 = Enemy(314, 122, 314 + adder, 122, self.enemySpeed, 0, adder, adder, adder)
+        enemy4 = Enemy(371, 122, 371 + adder, 122, self.enemySpeed, 0, adder, adder, adder)
+        enemy5 = Enemy(428, 122, 428 + adder, 122, self.enemySpeed, 0, adder, adder, adder)
+        enemy6 = Enemy(485, 122, 485 + adder, 122, self.enemySpeed, 0, adder, adder, adder)
+        enemy7 = Enemy(85, 179, 85 + adder, 179, self.enemySpeed, 0, adder, adder, adder)
+        enemy8 = Enemy(142, 179, 142 + adder, 179, self.enemySpeed, 0, adder, adder, adder)
+        enemy9 = Enemy(256, 179, 256 + adder, 179, self.enemySpeed, 0, adder, adder, adder)
+        enemy10 = Enemy(313, 179, 313 + adder, 179, self.enemySpeed, 0, adder, adder, adder)
+        enemy11 = Enemy(427, 179, 427 + adder, 179, self.enemySpeed, 0, adder, adder, adder)
+        enemy12 = Enemy(484, 179, 484 + adder, 179, self.enemySpeed, 0, adder, adder, adder)
+        enemy13 = Enemy(85, 236, 85 + adder, 236, self.enemySpeed, 0, adder, adder, adder)
+        enemy14 = Enemy(142, 236, 142 + adder, 236, self.enemySpeed, 0, adder, adder, adder)
+        enemy15 = Enemy(199, 236, 199 + adder, 236, self.enemySpeed, 0, adder, adder, adder)
+        enemy16 = Enemy(256, 236, 256 + adder, 236, self.enemySpeed, 0, adder, adder, adder)
+        enemy17 = Enemy(313, 236, 313 + adder, 236, self.enemySpeed, 0, adder, adder, adder)
+        enemy18 = Enemy(427, 236, 427 + adder, 236, self.enemySpeed, 0, adder, adder, adder)
+        enemy19 = Enemy(484, 236, 484 + adder, 236, self.enemySpeed, 0, adder, adder, adder)
+        self.enemy_list.add(enemy1, enemy2, enemy3, enemy4, enemy5, enemy6, enemy7, enemy8, enemy9, enemy10, enemy11,
+                            enemy12, enemy13, enemy14, enemy15, enemy16, enemy17, enemy18, enemy19)
         self.level_sprite_list.add(self.enemy_list)
 
         # Create winning block
         self.winning = WinningCube(537, 170)
         self.winning_cube.add(self.winning)
         self.level_sprite_list.add(self.winning_cube)
+
+def hidden_level(player_x, player_y, screen):
+    if player_x == 117 and player_y == 127:
+        BACKGROUND = (0, 154, 255)
+        player = Player(70, 220)
+        player.speed_reset()
+        clock = pygame.time.Clock()
+        level = Level3()
+        all_sprite_list = pygame.sprite.Group()
+        player.respawn.x = level.playerRespawn.x
+        player.respawn.y = level.playerRespawn.y
+        player.winning_cube = level.winning_cube
+        player.walls = level.wall_list
+        player.enemies = level.enemy_list
+        all_sprite_list.add(level.level_sprite_list)
+        all_sprite_list.add(player)
+        player.reset()
+        player_speed = level.playerSpeed
+        done = False
+        player.win = False
+        while not done:
+
+
+            if player.win:
+                break
+
+            for event in pygame.event.get():
+                if event.type == pygame.QUIT:
+                    done = True
+
+                elif event.type == pygame.KEYDOWN:
+                    if event.key == pygame.K_a:
+                        player.changespeed(-1 * player_speed, 0)
+                    elif event.key == pygame.K_d:
+                        player.changespeed(player_speed, 0)
+                    elif event.key == pygame.K_w:
+                        player.changespeed(0, -1 * player_speed)
+                    elif event.key == pygame.K_s:
+                        player.changespeed(0, player_speed)
+
+                elif event.type == pygame.KEYUP:
+                    if event.key == pygame.K_a:
+                        player.changespeed(player_speed, 0)
+                    elif event.key == pygame.K_d:
+                        player.changespeed(-1 * player_speed, 0)
+                    elif event.key == pygame.K_w:
+                        player.changespeed(0, player_speed)
+                    elif event.key == pygame.K_s:
+                        player.changespeed(0, -1 * player_speed)
+
+            enemy_mover(level.enemy_list)
+
+            all_sprite_list.update()
+
+            screen.fill(BACKGROUND)
+
+            all_sprite_list.draw(screen)
+
+            pygame.display.flip()
+
+            player.winner()
+
+            player.display_deaths(screen)
+
+            clock.tick(60)
+        player.changespeed(0, 0)
+        return True

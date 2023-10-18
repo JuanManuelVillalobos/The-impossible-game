@@ -1,6 +1,6 @@
 import pygame
-from levels import Level1, Level2, Level3
-from classes import Player
+from levels import Level1, Level2, hidden_level
+from classes import Player, HighScore, enemy_mover
 
 BACKGROUND = (0, 154, 255)
 
@@ -15,10 +15,7 @@ screen = pygame.display.set_mode([SCREEN_WIDTH, SCREEN_HEIGHT])
 pygame.display.set_caption("The Impossible Game")
 
 
-# Handle movement of enemies
-def enemy_mover(enemy_list):
-    for enemy in enemy_list:
-        enemy.move()
+
 
 # Call this function so the Pygame library can initialize itself
 pygame.init()
@@ -26,7 +23,7 @@ pygame.init()
 # List to hold all the sprites
 all_sprite_list = pygame.sprite.Group()
 
-levels = [Level1(), Level2(), Level3()]
+levels = [Level1(), Level2()]
 
 # Create the player paddle object
 player = Player(70, 220)
@@ -47,10 +44,11 @@ for level in range(len(levels)):
     player.win = False
     while not done:
 
-
-        if player.win == True:
+        if hidden_level(player.rect.x, player.rect.y, screen):
             break
 
+        if player.win:
+            break
 
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
@@ -88,13 +86,34 @@ for level in range(len(levels)):
 
         player.winner()
 
+        player.display_deaths(screen)
+
         clock.tick(60)
+
+    if done:
+        break
 
     all_sprite_list.remove(levels[level].level_sprite_list)
     all_sprite_list.remove(player)
 
-    if done:
-        pygame.quit()
-        break
-HighScore.update()
+if done:
+    pass
+
+else:
+    high_score_manager = HighScore()
+    new_score = 10000 - ((pygame.time.get_ticks() / 10) * (1 + player.deaths))  # Calculate score
+    high_score_manager.update_high_scores(new_score)
+
+    pygame.display.set_caption('High Scores')  # Set the title of the window
+
+    done = False
+    while not done:
+        screen.fill(BACKGROUND)  # Fill the screen with background color
+        high_score_manager.display_high_scores(screen)  # Draw high scores after updating the display
+        pygame.display.flip()
+        clock.tick(60)
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                done = True
+
 pygame.quit()

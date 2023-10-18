@@ -1,11 +1,14 @@
 import pygame
+import os
 
 WHITE = (255, 255, 255)
 BLUE = (50, 50, 255)
 GREEN = (0, 255, 0)
 
-name = 'Juanma'
-
+# Handle movement of enemies
+def enemy_mover(enemy_list):
+    for enemy in enemy_list:
+        enemy.move()
 
 class Player(pygame.sprite.Sprite):
     """ This class represents the red square that the player
@@ -39,8 +42,15 @@ class Player(pygame.sprite.Sprite):
         self.enemies = None
         self.winning_cube = None
 
+        # Death counter
+        self.deaths = 0
+
         # Determine if cube won
         self.win = False
+
+    def speed_reset(self):
+        self.change_x = 0
+        self.change_y = 0
 
     def changespeed(self, x, y):
         """ Change the speed of the player. """
@@ -79,6 +89,8 @@ class Player(pygame.sprite.Sprite):
         # Check and see if we hit an enemy
         enemy_hit_list = pygame.sprite.spritecollide(self, self.enemies, False)
         for _ in enemy_hit_list:
+            # Add death
+            self.deaths += 1
             # Reset player:
             self.rect.x = self.respawn.x
             self.rect.y = self.respawn.y
@@ -91,6 +103,14 @@ class Player(pygame.sprite.Sprite):
         winning_cube_hit_list = pygame.sprite.spritecollide(self, self.winning_cube, False)
         for _ in winning_cube_hit_list:
             self.win = True
+
+    def display_deaths(self, screen):
+        font = pygame.font.Font(None, 36)
+        death_text = font.render(f"Deaths: {self.deaths}", True, (250, 250, 250))
+        death_rect = death_text.get_rect(center=((screen.get_width() // 2), 50))
+        screen.blit(death_text, death_rect)
+
+
 
 
 class Wall(pygame.sprite.Sprite):
@@ -193,7 +213,8 @@ class Enemy(pygame.sprite.Sprite):
         if abs(final_point_difference_position_x) <= self.step and abs(final_point_difference_position_y) <= self.step:
             if self.iteration + 1 == 4:
                 self.iteration = 0
-            else: self.iteration += 1
+            else:
+                self.iteration += 1
 
         if abs(final_point_difference_position_x) <= self.step:
             self.change_x = 0
@@ -227,21 +248,50 @@ class WinningCube(pygame.sprite.Sprite):
         self.rect.x = x
 
 
-class HighScore():
-    # Constructor function
+class HighScore:
     def __init__(self):
-        self.score = 0
-        self.high_score = 0
+        pygame.init()
+        self.file_name = "HighScores"
+        self.high_scores = self.read_high_scores()  # Read high scores once upon initialization
+        self.display_high_score = False
 
-        highScores = highScore.readlines()
+    def get_path(self):
+        directory = os.path.dirname(os.path.abspath(self.file_name))
+        file_path = os.path.join(directory, self.file_name)
+        return file_path
 
-        for line in highScores:
-            if line == name:
-                self.high_score = int(highScores[highScores.index(line) + 1])
-                break
+    def read_high_scores(self):
+        # Read high scores from file
+        file_path = self.get_path()
+        with open(file_path, 'r') as file:
+            high_scores = [int(line.strip()) for line in file]
+            high_scores.sort(reverse=True)  # Sort in descending order
+            return high_scores
 
+    def update_high_scores(self, new_score):
+        file_path = self.get_path()
+        self.high_scores.append(int(new_score))
+        self.high_scores.sort(reverse=True)
+        self.high_scores = self.high_scores[:19]  # Keep only the top high score
+        with open(file_path, "w") as file:
+            for score in self.high_scores:
+                file.write(f"{score}\n")
+        self.display_high_score = True
 
-def update(self):
-    if self.score > self.high_score:
-        self.high_score = self.score
-        highScore.write(name + '\n' + str(self.high_score))
+    def display_high_scores(self, screen):
+        if self.display_high_score:
+            font = pygame.font.Font(None, 36)
+            top_score_text = font.render(f"Top High Score: {self.high_scores[0]}", True, (250, 250, 250))
+            text_rect = top_score_text.get_rect(center=(screen.get_width() // 2, 50))
+            screen.blit(top_score_text, text_rect)
+            for x in range(1, 10):
+                try:
+                    self.display_score(x, self.high_scores[x], screen)
+                except IndexError:
+                    pass
+
+    def display_score(self, num, score, screen):
+        font = pygame.font.Font(None, 36)
+        top_score_text = font.render(f"{num + 1} Highest Score: {score}", True, (250, 250, 250))
+        text_rect = top_score_text.get_rect(center=(screen.get_width() // 2, 100 + 30 * num))
+        screen.blit(top_score_text, text_rect)
