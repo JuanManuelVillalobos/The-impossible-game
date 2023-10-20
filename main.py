@@ -14,9 +14,6 @@ screen = pygame.display.set_mode([SCREEN_WIDTH, SCREEN_HEIGHT])
 # Set the title of the window
 pygame.display.set_caption("The Impossible Game")
 
-
-
-
 # Call this function so the Pygame library can initialize itself
 pygame.init()
 
@@ -25,16 +22,12 @@ all_sprite_list = pygame.sprite.Group()
 
 levels = [Level1(), Level2()]
 
-
 # Create the player paddle object
 player = Player(70, 220)
 
 clock = pygame.time.Clock()
-level = 0
 
-running = True
-
-for level in range(len(levels)+2):
+for level in range(len(levels) + 2):
     try:
         player.respawn.x = levels[level].playerRespawn.x
         player.respawn.y = levels[level].playerRespawn.y
@@ -49,8 +42,7 @@ for level in range(len(levels)+2):
         player.win = False
         while not done:
 
-
-            if hidden_level(player.rect.x,player.rect.y,levels):
+            if hidden_level(player.rect.x, player.rect.y, levels):
                 break
 
             if player.win:
@@ -59,8 +51,6 @@ for level in range(len(levels)+2):
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
                     done = True
-
-
 
                 elif event.type == pygame.KEYDOWN:
                     if event.key == pygame.K_a:
@@ -97,7 +87,6 @@ for level in range(len(levels)+2):
             player.display_deaths(screen)
 
             clock.tick(60)
-
 
         all_sprite_list.remove(levels[level].level_sprite_list)
         all_sprite_list.remove(player)
