@@ -1,5 +1,5 @@
 import pygame
-from classes import Player, Wall, Enemy, WinningCube, enemy_mover
+from classes import Wall, Enemy, WinningCube
 
 
 class BaseLevel:
@@ -157,8 +157,8 @@ class Level3(BaseLevel):
         enemy17 = Enemy(313, 236, 313 + adder, 236, self.enemySpeed, 0, adder, adder, adder)
         enemy18 = Enemy(427, 236, 427 + adder, 236, self.enemySpeed, 0, adder, adder, adder)
         enemy19 = Enemy(484, 236, 484 + adder, 236, self.enemySpeed, 0, adder, adder, adder)
-        self.enemy_list.add(enemy1, enemy2, enemy3, enemy4, enemy5, enemy6, enemy7, enemy8, enemy9, enemy10, enemy11,
-                            enemy12, enemy13, enemy14, enemy15, enemy16, enemy17, enemy18, enemy19)
+        self.enemy_list.add(enemy1)#, enemy2, enemy3, enemy4, enemy5, enemy6, enemy7, enemy8, enemy9, enemy10, enemy11,
+                            #enemy12, enemy13, enemy14, enemy15, enemy16, enemy17, enemy18, enemy19)
         self.level_sprite_list.add(self.enemy_list)
 
         # Create winning block
@@ -166,69 +166,7 @@ class Level3(BaseLevel):
         self.winning_cube.add(self.winning)
         self.level_sprite_list.add(self.winning_cube)
 
-def hidden_level(player_x, player_y, screen):
+def hidden_level(player_x, player_y, levels):
     if player_x == 117 and player_y == 127:
-        BACKGROUND = (0, 154, 255)
-        player = Player(70, 220)
-        player.speed_reset()
-        clock = pygame.time.Clock()
-        level = Level3()
-        all_sprite_list = pygame.sprite.Group()
-        player.respawn.x = level.playerRespawn.x
-        player.respawn.y = level.playerRespawn.y
-        player.winning_cube = level.winning_cube
-        player.walls = level.wall_list
-        player.enemies = level.enemy_list
-        all_sprite_list.add(level.level_sprite_list)
-        all_sprite_list.add(player)
-        player.reset()
-        player_speed = level.playerSpeed
-        done = False
-        player.win = False
-        while not done:
-
-
-            if player.win:
-                break
-
-            for event in pygame.event.get():
-                if event.type == pygame.QUIT:
-                    done = True
-
-                elif event.type == pygame.KEYDOWN:
-                    if event.key == pygame.K_a:
-                        player.changespeed(-1 * player_speed, 0)
-                    elif event.key == pygame.K_d:
-                        player.changespeed(player_speed, 0)
-                    elif event.key == pygame.K_w:
-                        player.changespeed(0, -1 * player_speed)
-                    elif event.key == pygame.K_s:
-                        player.changespeed(0, player_speed)
-
-                elif event.type == pygame.KEYUP:
-                    if event.key == pygame.K_a:
-                        player.changespeed(player_speed, 0)
-                    elif event.key == pygame.K_d:
-                        player.changespeed(-1 * player_speed, 0)
-                    elif event.key == pygame.K_w:
-                        player.changespeed(0, player_speed)
-                    elif event.key == pygame.K_s:
-                        player.changespeed(0, -1 * player_speed)
-
-            enemy_mover(level.enemy_list)
-
-            all_sprite_list.update()
-
-            screen.fill(BACKGROUND)
-
-            all_sprite_list.draw(screen)
-
-            pygame.display.flip()
-
-            player.winner()
-
-            player.display_deaths(screen)
-
-            clock.tick(60)
-        player.changespeed(0, 0)
+        levels.insert(1,Level3())
         return True

@@ -25,76 +25,88 @@ all_sprite_list = pygame.sprite.Group()
 
 levels = [Level1(), Level2()]
 
+
 # Create the player paddle object
 player = Player(70, 220)
 
 clock = pygame.time.Clock()
+level = 0
 
-for level in range(len(levels)):
-    player.respawn.x = levels[level].playerRespawn.x
-    player.respawn.y = levels[level].playerRespawn.y
-    player.winning_cube = levels[level].winning_cube
-    player.walls = levels[level].wall_list
-    player.enemies = levels[level].enemy_list
-    all_sprite_list.add(levels[level].level_sprite_list)
-    all_sprite_list.add(player)
-    player.reset()
-    player_speed = levels[level].playerSpeed
-    done = False
-    player.win = False
-    while not done:
+running = True
 
-        if hidden_level(player.rect.x, player.rect.y, screen):
+for level in range(len(levels)+2):
+    try:
+        player.respawn.x = levels[level].playerRespawn.x
+        player.respawn.y = levels[level].playerRespawn.y
+        player.winning_cube = levels[level].winning_cube
+        player.walls = levels[level].wall_list
+        player.enemies = levels[level].enemy_list
+        all_sprite_list.add(levels[level].level_sprite_list)
+        all_sprite_list.add(player)
+        player.reset()
+        player_speed = levels[level].playerSpeed
+        done = False
+        player.win = False
+        while not done:
+
+
+            if hidden_level(player.rect.x,player.rect.y,levels):
+                break
+
+            if player.win:
+                break
+
+            for event in pygame.event.get():
+                if event.type == pygame.QUIT:
+                    done = True
+
+
+
+                elif event.type == pygame.KEYDOWN:
+                    if event.key == pygame.K_a:
+                        player.changespeed(-1 * player_speed, 0)
+                    elif event.key == pygame.K_d:
+                        player.changespeed(player_speed, 0)
+                    elif event.key == pygame.K_w:
+                        player.changespeed(0, -1 * player_speed)
+                    elif event.key == pygame.K_s:
+                        player.changespeed(0, player_speed)
+
+                elif event.type == pygame.KEYUP:
+                    if event.key == pygame.K_a:
+                        player.changespeed(player_speed, 0)
+                    elif event.key == pygame.K_d:
+                        player.changespeed(-1 * player_speed, 0)
+                    elif event.key == pygame.K_w:
+                        player.changespeed(0, player_speed)
+                    elif event.key == pygame.K_s:
+                        player.changespeed(0, -1 * player_speed)
+
+            enemy_mover(levels[level].enemy_list)
+
+            all_sprite_list.update()
+
+            screen.fill(BACKGROUND)
+
+            all_sprite_list.draw(screen)
+
+            pygame.display.flip()
+
+            player.winner()
+
+            player.display_deaths(screen)
+
+            clock.tick(60)
+
+
+        all_sprite_list.remove(levels[level].level_sprite_list)
+        all_sprite_list.remove(player)
+
+        if done:
             break
 
-        if player.win:
-            break
-
-        for event in pygame.event.get():
-            if event.type == pygame.QUIT:
-                done = True
-
-            elif event.type == pygame.KEYDOWN:
-                if event.key == pygame.K_a:
-                    player.changespeed(-1 * player_speed, 0)
-                elif event.key == pygame.K_d:
-                    player.changespeed(player_speed, 0)
-                elif event.key == pygame.K_w:
-                    player.changespeed(0, -1 * player_speed)
-                elif event.key == pygame.K_s:
-                    player.changespeed(0, player_speed)
-
-            elif event.type == pygame.KEYUP:
-                if event.key == pygame.K_a:
-                    player.changespeed(player_speed, 0)
-                elif event.key == pygame.K_d:
-                    player.changespeed(-1 * player_speed, 0)
-                elif event.key == pygame.K_w:
-                    player.changespeed(0, player_speed)
-                elif event.key == pygame.K_s:
-                    player.changespeed(0, -1 * player_speed)
-
-        enemy_mover(levels[level].enemy_list)
-
-        all_sprite_list.update()
-
-        screen.fill(BACKGROUND)
-
-        all_sprite_list.draw(screen)
-
-        pygame.display.flip()
-
-        player.winner()
-
-        player.display_deaths(screen)
-
-        clock.tick(60)
-
-    if done:
+    except IndexError:
         break
-
-    all_sprite_list.remove(levels[level].level_sprite_list)
-    all_sprite_list.remove(player)
 
 if done:
     pass
