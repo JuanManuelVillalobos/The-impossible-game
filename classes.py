@@ -5,10 +5,12 @@ WHITE = (255, 255, 255)
 BLUE = (50, 50, 255)
 GREEN = (0, 255, 0)
 
+
 # Handle movement of enemies
 def enemy_mover(enemy_list):
     for enemy in enemy_list:
         enemy.move()
+
 
 class Player(pygame.sprite.Sprite):
     """ This class represents the red square that the player
@@ -109,8 +111,6 @@ class Player(pygame.sprite.Sprite):
         death_text = font.render(f"Deaths: {self.deaths}", True, (250, 250, 250))
         death_rect = death_text.get_rect(center=((screen.get_width() // 2), 50))
         screen.blit(death_text, death_rect)
-
-
 
 
 class Wall(pygame.sprite.Sprite):

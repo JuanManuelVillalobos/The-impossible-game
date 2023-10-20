@@ -1,5 +1,5 @@
 import pygame
-from classes import Player, Wall, Enemy, WinningCube, enemy_mover
+from classes import Wall, Enemy, WinningCube
 
 
 class BaseLevel:
@@ -138,25 +138,25 @@ class Level3(BaseLevel):
 
         adder = 30
         # Create enemies
-        enemy1 = Enemy(85, 122, 85 + adder, 122, self.enemySpeed, 0, adder, adder, adder)
-        enemy2 = Enemy(142, 1220, 142 + adder, 1220, self.enemySpeed, 0, adder, adder, adder)
-        enemy3 = Enemy(314, 122, 314 + adder, 122, self.enemySpeed, 0, adder, adder, adder)
-        enemy4 = Enemy(371, 122, 371 + adder, 122, self.enemySpeed, 0, adder, adder, adder)
-        enemy5 = Enemy(428, 122, 428 + adder, 122, self.enemySpeed, 0, adder, adder, adder)
-        enemy6 = Enemy(485, 122, 485 + adder, 122, self.enemySpeed, 0, adder, adder, adder)
-        enemy7 = Enemy(85, 179, 85 + adder, 179, self.enemySpeed, 0, adder, adder, adder)
-        enemy8 = Enemy(142, 179, 142 + adder, 179, self.enemySpeed, 0, adder, adder, adder)
-        enemy9 = Enemy(256, 179, 256 + adder, 179, self.enemySpeed, 0, adder, adder, adder)
-        enemy10 = Enemy(313, 179, 313 + adder, 179, self.enemySpeed, 0, adder, adder, adder)
-        enemy11 = Enemy(427, 179, 427 + adder, 179, self.enemySpeed, 0, adder, adder, adder)
-        enemy12 = Enemy(484, 179, 484 + adder, 179, self.enemySpeed, 0, adder, adder, adder)
-        enemy13 = Enemy(85, 236, 85 + adder, 236, self.enemySpeed, 0, adder, adder, adder)
-        enemy14 = Enemy(142, 236, 142 + adder, 236, self.enemySpeed, 0, adder, adder, adder)
-        enemy15 = Enemy(199, 236, 199 + adder, 236, self.enemySpeed, 0, adder, adder, adder)
-        enemy16 = Enemy(256, 236, 256 + adder, 236, self.enemySpeed, 0, adder, adder, adder)
-        enemy17 = Enemy(313, 236, 313 + adder, 236, self.enemySpeed, 0, adder, adder, adder)
-        enemy18 = Enemy(427, 236, 427 + adder, 236, self.enemySpeed, 0, adder, adder, adder)
-        enemy19 = Enemy(484, 236, 484 + adder, 236, self.enemySpeed, 0, adder, adder, adder)
+        enemy1 = Enemy(85, 122, 85, 122 + adder, self.enemySpeed, adder, 0, adder, adder)
+        enemy2 = Enemy(142, 1220, 142, 1220 + adder, self.enemySpeed, adder, 0, adder, adder)
+        enemy3 = Enemy(314, 122, 314, 122 + adder, self.enemySpeed, adder, 0, adder, adder)
+        enemy4 = Enemy(371, 122, 371, 122 + adder, self.enemySpeed, adder, 0, adder, adder)
+        enemy5 = Enemy(428, 122, 428, 122 + adder, self.enemySpeed, adder, 0, adder, adder)
+        enemy6 = Enemy(485, 122, 485, 122 + adder, self.enemySpeed, adder, 0, adder, adder)
+        enemy7 = Enemy(85, 179, 85, 179 + adder, self.enemySpeed, adder, 0, adder, adder)
+        enemy8 = Enemy(142, 179, 142, 179 + adder, self.enemySpeed, adder, 0, adder, adder)
+        enemy9 = Enemy(256, 179, 256, 179 + adder, self.enemySpeed, adder, 0, adder, adder)
+        enemy10 = Enemy(313, 179, 313, 179 + adder, self.enemySpeed, adder, 0, adder, adder)
+        enemy11 = Enemy(427, 179, 427, 179 + adder, self.enemySpeed, adder, 0, adder, adder)
+        enemy12 = Enemy(484, 179, 484, 179 + adder, self.enemySpeed, adder, 0, adder, adder)
+        enemy13 = Enemy(85, 236, 85, 236 + adder, self.enemySpeed, adder, 0, adder, adder)
+        enemy14 = Enemy(142, 236, 142, 236 + adder, self.enemySpeed, adder, 0, adder, adder)
+        enemy15 = Enemy(199, 236, 199, 236 + adder, self.enemySpeed, adder, 0, adder, adder)
+        enemy16 = Enemy(256, 236, 256, 236 + adder, self.enemySpeed, adder, 0, adder, adder)
+        enemy17 = Enemy(313, 236, 313, 236 + adder, self.enemySpeed, adder, 0, adder, adder)
+        enemy18 = Enemy(427, 236, 427, 236 + adder, self.enemySpeed, adder, 0, adder, adder)
+        enemy19 = Enemy(484, 236, 484, 236 + adder, self.enemySpeed, adder, 0, adder, adder)
         self.enemy_list.add(enemy1, enemy2, enemy3, enemy4, enemy5, enemy6, enemy7, enemy8, enemy9, enemy10, enemy11,
                             enemy12, enemy13, enemy14, enemy15, enemy16, enemy17, enemy18, enemy19)
         self.level_sprite_list.add(self.enemy_list)
@@ -166,69 +166,8 @@ class Level3(BaseLevel):
         self.winning_cube.add(self.winning)
         self.level_sprite_list.add(self.winning_cube)
 
-def hidden_level(player_x, player_y, screen):
+
+def hidden_level(player_x, player_y, levels):
     if player_x == 117 and player_y == 127:
-        BACKGROUND = (0, 154, 255)
-        player = Player(70, 220)
-        player.speed_reset()
-        clock = pygame.time.Clock()
-        level = Level3()
-        all_sprite_list = pygame.sprite.Group()
-        player.respawn.x = level.playerRespawn.x
-        player.respawn.y = level.playerRespawn.y
-        player.winning_cube = level.winning_cube
-        player.walls = level.wall_list
-        player.enemies = level.enemy_list
-        all_sprite_list.add(level.level_sprite_list)
-        all_sprite_list.add(player)
-        player.reset()
-        player_speed = level.playerSpeed
-        done = False
-        player.win = False
-        while not done:
-
-
-            if player.win:
-                break
-
-            for event in pygame.event.get():
-                if event.type == pygame.QUIT:
-                    done = True
-
-                elif event.type == pygame.KEYDOWN:
-                    if event.key == pygame.K_a:
-                        player.changespeed(-1 * player_speed, 0)
-                    elif event.key == pygame.K_d:
-                        player.changespeed(player_speed, 0)
-                    elif event.key == pygame.K_w:
-                        player.changespeed(0, -1 * player_speed)
-                    elif event.key == pygame.K_s:
-                        player.changespeed(0, player_speed)
-
-                elif event.type == pygame.KEYUP:
-                    if event.key == pygame.K_a:
-                        player.changespeed(player_speed, 0)
-                    elif event.key == pygame.K_d:
-                        player.changespeed(-1 * player_speed, 0)
-                    elif event.key == pygame.K_w:
-                        player.changespeed(0, player_speed)
-                    elif event.key == pygame.K_s:
-                        player.changespeed(0, -1 * player_speed)
-
-            enemy_mover(level.enemy_list)
-
-            all_sprite_list.update()
-
-            screen.fill(BACKGROUND)
-
-            all_sprite_list.draw(screen)
-
-            pygame.display.flip()
-
-            player.winner()
-
-            player.display_deaths(screen)
-
-            clock.tick(60)
-        player.changespeed(0, 0)
+        levels.insert(1, Level3())
         return True
